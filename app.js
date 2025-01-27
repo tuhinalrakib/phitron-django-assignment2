@@ -1,3 +1,4 @@
+const cardContainer = document.getElementById("card-container")
 
 const url = `https://www.thecocktaildb.com/api/json/v1/1/random.php`
 
@@ -18,20 +19,44 @@ async function loadAllDrinks(count){
 }
 
 const displayDrinks = (drinks)=>{
-    const cardContainer = document.getElementById("card-container")
     cardContainer.innerHTML = ""
 
     drinks.forEach(drinkData => {
         const drink = drinkData.drinks[0]
-        console.log(drinkData.drinks[0])
+        // console.log(drinkData.drinks[0])
         const div = document.createElement("div")
         div.classList.add("drink-card")
         div.innerHTML = `
             <img src="${drink.strDrinkThumb}" alt="${drink.strDrink}" />
             <h1><span>Title:</span> ${drink.strDrink}</h1>
+            <h5>Category: ${drink.strCategory}</h5>
+            <p>Instructions: ${drink.strInstructions.slice(0,20)}...</p>
+            <div class="button-container">
+                <button class="add-to-cart-btn" onclick="addToCart('${drink.strDrinkThumb}','${drink.strDrink}')">Add To Cart</button>
+                <button class="details-btn">Details</button>
+            </div>
         `
         cardContainer.appendChild(div)
     });
+}
+
+let serialNumber = 0
+const addToCart = (image,title)=>{
+    const addCart = document.getElementById("cart-items")
+    const cartCount = document.getElementById("cart-title")
+    if(serialNumber >= 7){
+        alert("Cart is full")
+        return
+    }
+    serialNumber += 1
+    cartCount.innerHTML = `${serialNumber}`
+    const tr = document.createElement("tr")
+    tr.innerHTML = `
+        <td>${serialNumber} </td>
+        <td><img class="table-img" src="${image}" width="50" height="50"/></td>
+        <td><h5> ${title} </h5></td>
+    `
+    addCart.appendChild(tr)
 }
 
 const searchDrinks = ()=>{
@@ -44,8 +69,42 @@ const searchDrinks = ()=>{
         if(searchValue === ""){
             alert("Please enter valid drink data")
         }
+
+        const url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchValue}`
+        fetch(url)
+        .then(response => response.json())
+        .then(drinkdata=>{
+            cardContainer.innerHTML = ""
+
+            if(drinkdata.drinks){
+                drinkdata.drinks.forEach(drink=>{
+                    console.log(drink.strDrink)
+                    const div = document.createElement("div")
+                    div.classList.add("drink-card")
+                    div.innerHTML = `
+                        <img src="${drink.strDrinkThumb}" alt="${drink.strDrink}" />
+                        <h1><span>Title:</span> ${drink.strDrink}</h1>
+                        <h5><span>Category:</span> ${drink.strCategory}</h5>
+                        <p>Instructions: ${drink.strInstructions.slice(0,20)}...</p>
+                        <div class="button-container">
+                            <button class="add-to-cart-btn" onclick="addToCart('${drink.strDrinkThumb}','${drink.strDrink}')">Add To Cart</button>
+                            <button class="details-btn">Details</button>
+                        </div>
+                    `
+                    cardContainer.appendChild(div)
+                })
+            }else{
+                const h1 = document.createElement("h1")
+                const cardMessage = document.getElementById("card-message")
+                h1.classList.add("error-message")
+                h1.textContent = "No drinks found!"
+                cardMessage.appendChild(h1)
+            }
+        })
     })
 }
+
+
 
 loadAllDrinks(12)
 searchDrinks()

@@ -11,10 +11,33 @@
         <input id="search-input" type="text" placeholder="Type youe Meal Name">
         <button id="btn-search">Search</button>
     </div>
-    <div id="card-container" class="card-container">
-        <!-- Dynamically generated Drink cards -->
-    </div>
 
+
+    <div class="main-container">
+        <div id="card-container" class="card-container">
+            <!-- Dynamically generated Drink cards -->
+        </div>
+        <div class="cart-container">
+            <h2 class="cart-title">Cart item: <h3 id="cart-title"></h3></h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Img</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody id="cart-items">
+                    <!-- Cart Items -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="card-message" id="card-message">
+        
+    </div>
+    
 
 <script src="./app.js"></script>
 </body>
