@@ -33,13 +33,40 @@ const displayDrinks = (drinks)=>{
             <p>Instructions: ${drink.strInstructions.slice(0,20)}...</p>
             <div class="button-container">
                 <button class="add-to-cart-btn" onclick="addToCart('${drink.strDrinkThumb}','${drink.strDrink}')">Add To Cart</button>
-                <button class="details-btn">Details</button>
+                <button class="details-btn" onclick="detailsDrink('${drink.strDrink}','${drink.strDrinkThumb}','${drink.strCategory}','${drink.strAlcoholic}','${drink.strInstructions}')">Details</button>
             </div>
         `
         cardContainer.appendChild(div)
     });
 }
 
+// Details Function
+const modalContainer = document.getElementById("modal-container")
+
+const detailsDrink = (title,image,category,alchoholic,description)=>{
+    modalContainer.style.display = 'flex'
+    const div = document.createElement("div")
+    div.classList.add("modal-content")
+    div.innerHTML = `
+    <h5>${title}</h5>
+    <img src="${image}" alt="${title}" />
+    <p>Details:</p><br/>
+    <h5>Category: ${category}</h5>
+    <h5>Alchoholic: ${alchoholic}</h5>
+    <p>Descrition: ${description.slice(0,40)}</p>
+    <div class="close-modal">
+        <button id="closeBtn" onclick="closeModal()">Close</button>
+    </div>
+    `
+    modalContainer.appendChild(div)
+}
+
+// Close Modal Function
+const closeModal = ()=>{
+    modalContainer.style.display = "none"
+}
+
+// Add to cart Function
 let serialNumber = 0
 const addToCart = (image,title)=>{
     const addCart = document.getElementById("cart-items")
@@ -59,6 +86,7 @@ const addToCart = (image,title)=>{
     addCart.appendChild(tr)
 }
 
+// Drink Search Function
 const searchDrinks = ()=>{
     const seacrchInput = document.getElementById("search-input")
     const btnSearch = document.getElementById("btn-search")
